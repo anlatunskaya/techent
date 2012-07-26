@@ -16,7 +16,7 @@ google = oauth.remote_app('google',
     consumer_key      = conf.GOOGLE_APP_ID,
     consumer_secret   = conf.GOOGLE_APP_SECRET,
     request_token_params={'response_type': 'code',
-                          'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+                          'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar https://www.google.com/calendar/feeds/',
                           'state': 5,
                           'access_type': 'offline'
                           }

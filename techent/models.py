@@ -110,6 +110,7 @@ class Event(TimeStampMixin, Document):
     tags = ListField(StringField())
     time_zone = FloatField() # it's offset from utc in seconds
     comments = ListField(EmbeddedDocumentField(Comment))
+    attendees = ListField(StringField())
 
     meta = {
             "collection": "events"

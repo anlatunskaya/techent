@@ -18,6 +18,7 @@ class EventForm(Form):
     hosts = TextField("Hosts description")
     tags = TextField("Tags")
     comments = TextField("Comment")
+    attendees = TextField("E-mails")
 
     def validate_start_date(self, field):
         self.iso_date(field.data)
