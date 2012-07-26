@@ -13,6 +13,14 @@ THUMB_PATH  = p.join(p.dirname(p.abspath(__file__)), 'static', 'thumbnails')
 GOOGLE_APP_ID = "579528667694.apps.googleusercontent.com"
 GOOGLE_APP_SECRET = "-OnDViIddIiwasvU9rV293DT"
 
+DEBUG=True
+#EMAIL SETTINGS
+MAIL_SERVER='smtp.gmail.com'
+MAIL_PORT=465
+MAIL_USE_SSL=True
+MAIL_USERNAME = 'techent.griddynamics@gmail.com'
+MAIL_PASSWORD = 'techent.griddynamics'
+
 try:
     from local_config import *
 except ImportError:

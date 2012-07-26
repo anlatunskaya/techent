@@ -34,7 +34,11 @@
                    {{ render_field(form.description)  }} 
                    {{ render_field(form.location)  }}
                    {{ render_field(form.tags)  }}
-                   {{ render_field(form.attendees) }}
+                    <div class="clearfix">
+                        {{ form.attendees.label }}
+                        <textarea id="attendees" name="attendees" style="display: block; width: 100%;" type="text">
+                        </textarea>
+                    </div>
                     <button type="submit" class="btn large">Create event</button>
                 </form>
                 <hr>

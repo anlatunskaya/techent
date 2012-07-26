@@ -61,6 +61,7 @@
                         </td>
                     </tr>
                 </table>
+                <a href="{{ url_for('event.create_event_in_calendar',  event_id = event._id) }}" class="btn-inverse">Add event to Google Calendar</a>
                 <div class="comment_label">Comments</div>
                 <div class="comments">
                     {% for comment in event.comments %}

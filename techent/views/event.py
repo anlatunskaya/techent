@@ -8,8 +8,9 @@ from sets import Set
 from flask_login import login_required, current_user
 from bson.objectid import ObjectId
 import datetime
-import requests
 import json
+import mail
+import requests
 
 event = Blueprint("event", __name__)
 
@@ -27,7 +28,7 @@ def create_event():
         end_date = form.iso_date(form.end_date.data)
         user_id = current_user.id
         user = User.objects.with_id(ObjectId(user_id))
-        attendees = form.attendees.data.split(",")
+        attendees = [attendee.strip() for attendee in form.attendees.data.split(",")]
         event = Event(author=user,
                         subject = form.subject.data,
                         start_date = start_date,
@@ -39,7 +40,7 @@ def create_event():
         if request.files[form.logo.name]:
             event.logo.put(request.files[form.logo.name])
         event.save()
-        create_event_in_calendar(event)
+        mail.send_event_invitation(event)
         return redirect(url_for("main.frontpage"))
     return render_template("create_event.html", form = form)
 
@@ -58,13 +59,30 @@ def store_tag_metainformation(tag_names):
 
         tag.save()
 
-def create_event_in_calendar(event):
+@event.route('/create-event-in-calendar/<event_id>')
+def create_event_in_calendar(event_id):
+    event = Event.objects.with_id(event_id)
+    user = User.objects.with_id(ObjectId(current_user.id))
     headers = {'Authorization': 'OAuth ' + str(current_user.access_token),
-             'Content-Type': 'application/json'}
-    data = {"summary": event.subject, "reminders": [{"method": "email", "minutes": 10}],"start": {"dateTime": str(event.start_date.isoformat()), "timeZone": "Europe/Kaliningrad"},"end": {"dateTime": str(event.end_date.isoformat()), "timeZone": "Europe/Kaliningrad"},
-            "attendees": [{"email": "anlatunskaya@gmail.com"}], "anyoneCanAddSelf": True, "guestsCanInviteOthers": True}
+               'Content-Type': 'application/json'}
+    data = {
+            "summary": event.subject,
+            "description": event.description,
+            "reminders": [
+                            {"method": "email", "minutes": 10}
+                        ],
+            "start": {"dateTime": str(event.start_date.isoformat()), "timeZone": "Europe/Kaliningrad"},
+            "end": {"dateTime": str(event.end_date.isoformat()), "timeZone": "Europe/Kaliningrad"},
+            "attendees": [
+                        {"email": user.email}
+                        ],
+            "anyoneCanAddSelf": True,
+            "guestsCanInviteOthers": True
+    }
     data = str(json.dumps(data))
     req = requests.post('https://www.googleapis.com/calendar/v3/calendars/' + User.objects.with_id(ObjectId(current_user.id)).email + '/events', data=data, headers=headers)
+    return redirect(url_for('event.show_event', event_id=event_id))
+
 @event.route('/event/<event_id>')
 def show_event(event_id):
     event = Event.objects.with_id(ObjectId(event_id))
