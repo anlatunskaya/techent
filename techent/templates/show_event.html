@@ -1,7 +1,7 @@
 {% extends "_layout.html" %}
 {#{% block nav %}{% endblock %}#}
 {% block content %}
-<div class="container">
+<div class="container" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="span6 offset3 well">
             <div id="single_event_page">
@@ -61,9 +61,18 @@
                         </td>
                     </tr>
                 </table>
-                <a href="{{ url_for('event.create_event_in_calendar',  event_id = event._id) }}" class="btn-inverse">Add event to Google Calendar</a>
-                <div class="comment_label">Comments</div>
-                <div class="comments">
+                {% for document in event.files %}
+                    <a href="{{ url_for('event.download_document', document_id=document.document_id) }}">{{ document.name }}</a>
+                <br/>
+                {% endfor %}
+                {%- if current_user.is_authenticated() -%}
+                    <form action="{{ url_for('event.upload_file', event_id = event._id) }}" method="POST" enctype="multipart/form-data">
+                        <input type="file" id="file" name="file"/>
+                        <button type="submit" class="btn large btn-success">Add files</button>
+                    </form>
+                    <a href="{{ url_for('event.create_event_in_calendar',  event_id = event._id) }}" class="btn-inverse">Add event to Google Calendar</a>
+                    <div class="comment_label">Comments</div>
+                    <div class="comments">
                     {% for comment in event.comments %}
                     <div style="float: left;">
                         <img src="{{ comment.author.avatar_url }}" alt="">
@@ -75,6 +84,7 @@
                         {{ comment.text }}
                     </p>
                     {% endfor %}
+
                     <form enctype="multipart/form-data" action="{{ url_for('event.add_comment', event_id = event._id) }}" method="post">
                         <div class="btn-margin-top">
                             <textarea id="comment" name="comment" style="display: block;" type="text">
@@ -83,6 +93,7 @@
                         </div>
                     </form>
                 </div>
+                {%- endif -%}
             </div>
         </div>
     </div>

@@ -6,10 +6,10 @@
 
 from flask_mongoengine import MongoEngine
 from flaskext.mail import Mail
+from techent.extensions.login_manager import login
 
 
 mongoengine = MongoEngine()
 mail_ext = Mail()
-from techent.extensions.login_manager import login
 
 __all__ = ['login', 'mongoengine', 'mail_ext']

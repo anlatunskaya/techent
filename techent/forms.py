@@ -19,6 +19,7 @@ class EventForm(Form):
     tags = TextField("Tags")
     comments = TextField("Comment")
     attendees = TextField("Invitees' e-mails")
+    files = FileField("Files")
 
     def validate_start_date(self, field):
         self.iso_date(field.data)
@@ -46,3 +47,6 @@ class EventForm(Form):
 class CommentForm(Form):
     comment = TextField("Comment" , [validators.Required()])
     date = HiddenField("Date")
+
+class FileForm(Form):
+    file = FileField("File")

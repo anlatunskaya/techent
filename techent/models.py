@@ -99,10 +99,16 @@ class Comment(EmbeddedDocument):
     date = DateTimeField()
     text = StringField()
 
+
+class DocumentFile(EmbeddedDocument):
+    document_id = ObjectIdField()
+    name = StringField()
+    content_type = StringField()
+
 class Event(TimeStampMixin, Document):
     author = ReferenceField(User)
     subject = StringField(required = True)
-    logo = ImageField() 
+    logo = EmbeddedDocumentField(DocumentFile)
     start_date = DateTimeField(required=True)
     end_date = DateTimeField(required=True)
     description = StringField()
@@ -111,7 +117,9 @@ class Event(TimeStampMixin, Document):
     time_zone = FloatField() # it's offset from utc in seconds
     comments = ListField(EmbeddedDocumentField(Comment))
     attendees = ListField(StringField())
+    files = ListField(EmbeddedDocumentField(DocumentFile))
 
     meta = {
             "collection": "events"
         }
+

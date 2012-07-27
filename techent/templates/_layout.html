@@ -47,12 +47,14 @@
                 <div class="navbar navbar-fixed navbar-fixed-top">
                     <div class="navbar-inner">
                         <div class="container">
-                            <a class="brand" href="#">
+                            <a class="brand" href="/">
                                 TechEvent
                             </a>
                             <ul class="nav">
-                                <li class='active'><a href="{{ url_for('event.create_event') }}">Create event</a></li>
-                                <li><a href="#">Search events</a></li>
+                                {%- if current_user.is_authenticated() -%}
+                                    <li class='active'><a href="{{ url_for('event.create_event') }}">Create event</a></li>
+                                {%- endif -%}
+                                <li><a href="/">Search events</a></li>
                             </ul>
                             <ul class="nav pull-right user">
                                 {% if current_user %}
@@ -60,7 +62,31 @@
                                 {% else %}
                                     <li><a href=""><img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm" alt="">Username</a></li>
                                 {% endif %}
+                                {%- if not current_user.is_authenticated() -%}
+                                    <li><a href="{{ url_for('oauth.google_login') }}" >Log in</a></li>
+                                {%- else -%}
+                                    <li><a href="{{ url_for('oauth.logout') }}">Log out</a></li>
+                                {%- endif -%}
                             </ul>
+                            <!--{%- if not current_user.is_authenticated() -%}-->
+                            <!--<a href="{{ url_for('oauth.google_login') }}" >Log in</a>-->
+                                <!--&lt;!&ndash;<ul>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="span3 buttons">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<button class="btn-auth btn-google">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<a href="{{ url_for('oauth.google_login') }}" class="btn">Sign up with <strong>Google</strong></a>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+                            <!--{%- else -%}-->
+                            <!--<a href="{{ url_for('oauth.logout') }}">Log out</a>-->
+                                <!--&lt;!&ndash;<ul>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="span3 buttons">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<button class="btn-auth btn-google">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<a href="{{ url_for('oauth.logout') }}" class="btn">Log out</a>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+                            <!--{%- endif -%}-->
                         </div>
                     </div>
                 </div>

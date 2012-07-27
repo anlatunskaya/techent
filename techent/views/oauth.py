@@ -3,10 +3,11 @@ from functools import wraps
 from flask.blueprints import Blueprint
 from flask.globals import session, request
 from flask.helpers import url_for, flash
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 from werkzeug.utils import redirect
 from techent.models import User
 from techent.oauth import google
+from flask import render_template
 
 oauth = Blueprint('oauth', __name__)
 
@@ -78,3 +79,9 @@ def google_oauth_authorized(resp):
         user.save()
 
     login_user(user)
+
+@oauth.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.frontpage'))

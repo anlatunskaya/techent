@@ -9,11 +9,7 @@
                     <p>
                     </p>
                 </div>
-                <div class="span3 buttons">
-                    <button class="btn-auth btn-google">
-                        <a href="{{ url_for('oauth.google_login') }}" class="btn">Sign up with <strong>Google</strong></a>
-                    </button>
-                </div>
+
             </div>
         </div>
     </header>
@@ -28,13 +24,24 @@
                         {% for event in events %}
                         <table style="background-color: #edf4ff; " frame="below" width="100%" >
                             <tr >
-                                <td colspan="2" style="padding: 10px 10px 0 10px;"><a href=" {{ url_for('event.show_event', event_id = event._id) }} ">{{ event.subject }}</a></td><td width="40%" rowspan="3">{{ event.logo }}</td>
+                                <td colspan="2" style="padding: 10px 10px 0 10px;">
+                                    <a href=" {{ url_for('event.show_event', event_id = event._id) }} ">{{ event.subject }}</a>
+                                </td>
+                                <td width="40%" rowspan="3">
+                                    <img src="{{ url_for('event.download_document', document_id=event.logo.document_id) }}" alt="No">
+                                </td>
                             </tr>
                             <tr>
                                 <td width="15%" style="padding: 0 10px 0 10px;"><b>Start Date:</b></td><td>{{ event.start_date.__str__()[:16] }}</td>
                             </tr>
                             <tr>
-                                <td width="15%" style="padding: 0 10px 10px 10px;"><b>Tags:</b></td><td>{% for tags in tags %}{{ tags.name }}{% endfor %}</td>
+                                <td width="15%" style="padding: 0 10px 0 10px;"><b>End Date:</b></td><td>{{ event.end_date.__str__()[:16] }}</td>
+                            </tr>
+                            <tr>
+                                <td width="15%" style="padding: 0 10px 0 10px;"><b>Description:</b></td><td>{{ event.description }}</td>
+                            </tr>
+                            <tr>
+                                <td width="15%" style="padding: 0 10px 10px 10px;"><b>Tags:</b></td><td>{% for tags in event.tags %}{{ tags.name }}{% endfor %}</td>
                             </tr>
                             <tr style="background-color: #ffffff;">&nbsp;</tr>
                         </table>
